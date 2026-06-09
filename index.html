@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Developer Dotfiles — Built From Scratch</title>
+<meta name="description" content="An original from-scratch build of a portable dotfiles setup: shell, Neovim and Lua configuration that turns a bare machine into my machine with a single command." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --accent:#475569; --accent-soft:#eef1f5; --ink:#16201f; --muted:#5d6b69;
+    --line:#dfe5e3; --bg:#fbfcfb; --card:#ffffff;
+    --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:0 28px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:var(--mono);font-size:.86em;background:var(--accent-soft);padding:.1em .4em;border-radius:4px;color:#334155}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.15;letter-spacing:-.01em}
+  /* Header */
+  header.hero{padding:88px 0 56px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 22px}
+  h1{font-size:clamp(2.6rem,6vw,4.1rem);margin:0 0 18px}
+  .lede{font-size:1.22rem;color:var(--muted);max-width:62ch;margin:0 0 28px}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:.82rem}
+  .chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;border:1px solid var(--line);border-radius:999px;padding:5px 12px;color:var(--muted);background:var(--card)}
+  /* Sections */
+  section{padding:54px 0;border-bottom:1px solid var(--line)}
+  .kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  h2{font-size:clamp(1.7rem,3.4vw,2.3rem);margin:0 0 20px}
+  h3{font-size:1.2rem;margin:0 0 6px}
+  p{margin:0 0 18px;max-width:68ch}
+  .muted{color:var(--muted)}
+  /* Stack grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:8px}
+  .tool{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .tool .t{font-family:var(--mono);font-size:.78rem;color:var(--accent);letter-spacing:.04em;margin-bottom:8px}
+  .tool h3{font-size:1.05rem;font-family:var(--sans);font-weight:600;margin-bottom:6px}
+  .tool p{font-size:.92rem;color:var(--muted);margin:0}
+  /* Pipeline / modules */
+  ol.flow{counter-reset:s;list-style:none;padding:0;margin:24px 0 0}
+  ol.flow li{position:relative;padding:18px 0 18px 56px;border-top:1px solid var(--line)}
+  ol.flow li:before{counter-increment:s;content:counter(s,decimal-leading-zero);position:absolute;left:0;top:18px;font-family:var(--mono);font-size:.8rem;color:var(--accent);border:1px solid var(--line);border-radius:8px;width:38px;height:38px;display:grid;place-items:center;background:var(--card)}
+  ol.flow li h3{font-family:var(--sans);font-size:1.02rem;font-weight:600;margin:0 0 4px}
+  ol.flow li p{margin:0;font-size:.93rem;color:var(--muted)}
+  .tag{display:inline-block;font-family:var(--mono);font-size:.68rem;padding:2px 7px;border-radius:5px;margin-left:8px;vertical-align:middle}
+  .tag.on{background:#e6f7ec;color:#1c7a43}
+  .tag.off{background:#fdecea;color:#b23b2c}
+  /* Callout */
+  .callout{background:var(--accent-soft);border:1px solid #d4dae3;border-radius:14px;padding:24px 26px;margin-top:8px}
+  .callout p:last-child{margin:0}
+  /* Reflection list */
+  ul.learn{list-style:none;padding:0;margin:8px 0 0}
+  ul.learn li{padding:14px 0 14px 30px;border-top:1px solid var(--line);position:relative;color:var(--muted);max-width:68ch}
+  ul.learn li:before{content:"→";position:absolute;left:0;color:var(--accent);font-family:var(--mono)}
+  ul.learn li b{color:var(--ink);font-weight:600}
+  /* Footer */
+  footer{padding:48px 0 80px}
+  .credit{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px}
+  .credit .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  footer .fine{font-size:.8rem;color:var(--muted);margin-top:22px;text-align:center}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">From-Scratch Build · Dev Environment</p>
+    <h1>Developer Dotfiles</h1>
+    <p class="lede">The small, invisible configuration files that quietly run my whole development setup — shell, editor, prompt, git — collected into one repository so a brand-new machine becomes <i>my</i> machine with a single command.</p>
+    <div class="meta">
+      <span class="chip">Zsh</span><span class="chip">Neovim</span><span class="chip">Lua</span>
+      <span class="chip">Symlinks</span><span class="chip">Bootstrap</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">What it is</p>
+    <h2>The files behind the prompt</h2>
+    <p>On a Unix system, almost every tool reads its settings from a hidden file in your home directory — a name that starts with a dot, like <code>.zshrc</code> or <code>.config/nvim/init.lua</code>. These <b>dotfiles</b> are what make a terminal feel like home: the aliases you type without thinking, the colours of your prompt, the key bindings in your editor. Left alone, they scatter across a machine and are forgotten the moment you switch computers.</p>
+    <p>I built this to solve that problem the way experienced developers do: keep every dotfile in one version-controlled repository, then have a single command lay them down onto any machine. The goal isn't the files themselves — it's <i>reproducibility</i>. A laptop wiped today should look and feel identical tomorrow.</p>
+    <div class="callout">
+      <p><b>The core idea I wanted to learn:</b> your environment is code. If your shell, editor and tools are described by files in a repo, then setting up a machine stops being an afternoon of clicking and becomes one command you can run, version, and roll back like any other software.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">The stack</p>
+    <h2>What lives in the repo</h2>
+    <p class="muted">A dotfiles repo is a cross-section of a working environment. Here are the pieces I configured and why each one earns its place.</p>
+    <div class="grid">
+      <div class="tool"><div class="t">shell</div><h3>Zsh config</h3><p>The interactive shell — aliases, functions, key bindings, options and environment variables, split into small files so each concern is easy to find and edit.</p></div>
+      <div class="tool"><div class="t">editor</div><h3>Neovim + Lua</h3><p>The editor configured in <code>init.lua</code>. Modern Neovim is scripted in Lua, so the editor's behaviour is real, readable code rather than an opaque settings panel.</p></div>
+      <div class="tool"><div class="t">prompt</div><h3>Prompt theme</h3><p>A fast, informative command prompt that shows the current directory, git branch and status at a glance — defined in a single declarative config file.</p></div>
+      <div class="tool"><div class="t">version control</div><h3>Git config</h3><p>Global git identity, aliases and a shared ignore list, so every repo on the machine inherits the same sensible defaults.</p></div>
+      <div class="tool"><div class="t">tooling</div><h3>CLI tool configs</h3><p>Settings for the everyday command-line tools — search, paging, fuzzy-finding — tuned once and carried everywhere.</p></div>
+      <div class="tool"><div class="t">manager</div><h3>A dotfile manager</h3><p>The engine that maps repo files to their real home-directory locations and applies them — turning a clone into a fully configured environment.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">How it works</p>
+    <h2>From clone to configured</h2>
+    <p>The repository doesn't store files at their final paths — it stores a <i>recipe</i> for where each one should go. A small set of naming conventions tells the manager how to translate repo files into a live home directory.</p>
+    <ol class="flow">
+      <li><h3>Source of truth <span class="tag on">core</span></h3><p>Every config lives in the repo, named by convention so the manager knows a <code>dot_zshrc</code> file becomes <code>~/.zshrc</code> on the target machine.</p></li>
+      <li><h3>Link, don't copy <span class="tag on">core</span></h3><p>Files are symlinked into place, so editing the live file <i>is</i> editing the repo. Changes are never silently lost.</p></li>
+      <li><h3>Templates for the variable bits <span class="tag on">core</span></h3><p>The few things that differ per machine — names, paths, secrets — are filled in from templates at apply time rather than hard-coded.</p></li>
+      <li><h3>Keep secrets encrypted <span class="tag on">core</span></h3><p>Sensitive files are stored encrypted in the repo and decrypted only on apply, so a public dotfiles repo never leaks credentials.</p></li>
+      <li><h3>Run-once bootstrap <span class="tag on">core</span></h3><p>First-run scripts install the packages a fresh machine needs, so the environment is complete, not just configured.</p></li>
+      <li><h3>Per-OS replay feature <span class="tag off">future</span></h3><p>Fuller branching for non-macOS machines is left as future work — a reminder that ambitious builds are never quite finished.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">How it runs</p>
+    <h2>One command on a bare machine</h2>
+    <p>Bootstrapping is the whole point. The promise of the build is that a freshly imaged laptop, with nothing installed, can be brought to a complete working state by a single line:</p>
+    <ul class="learn">
+      <li><b>Initialise:</b> the manager clones the repo and reads its conventions on a machine that has none of my config yet.</li>
+      <li><b>Apply:</b> every dotfile is symlinked into the home directory and every template is filled in for this specific machine.</li>
+      <li><b>Bootstrap:</b> run-once scripts install the underlying tools and packages, so the configs they point at actually exist.</li>
+    </ul>
+    <p class="muted" style="margin-top:18px">In my rebuild I focused on the apply-and-bootstrap path: a single <code>init --apply</code> takes a clean machine to a configured shell, editor and prompt without manual setup.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Reflection</p>
+    <h2>What rebuilding it taught me</h2>
+    <ul class="learn">
+      <li><b>Dotfiles are documentation.</b> Once my environment lives in a repo, the commit history <i>is</i> the record of every decision I've made about how I work.</li>
+      <li><b>Symlinks beat copies.</b> Linking files back to the repo means I can never drift out of sync — there's exactly one copy of the truth, edited in place.</li>
+      <li><b>The hard part is what varies.</b> Most config is identical everywhere; the craft is isolating the machine-specific bits into templates so the rest stays universal.</li>
+      <li><b>Secrets need a plan from day one.</b> A public dotfiles repo is only safe if encryption is built into the workflow, not bolted on after a leak.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="credit">
+      <div class="k">About this build</div>
+      <p style="margin:0">An original, from-scratch build by <b>Andrea</b> — written to learn how developers keep a portable, reproducible environment by treating their configuration as version-controlled code. Plain HTML/CSS, deployed on GitHub Pages.</p>
+    </div>
+    <p class="fine">Built from scratch by Andrea · one of an ongoing series of learning builds.</p>
+  </div>
+</footer>
+</body>
+</html>
